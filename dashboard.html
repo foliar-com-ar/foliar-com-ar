@@ -10,162 +10,129 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --azul:  #0d1b3e;
-            --azul2: #1a2f5e;
-            --azul3: #1a6fa0;
-            --teal:  #1a8fa0;
-            --teal2: #2ab5cc;
-            --fondo: #f0f4f8;
-            --card:  #ffffff;
-            --texto: #1a1a2e;
-            --suave: #5a6a80;
-            --borde: #d0dbe8;
-            --radio: 12px;
+            --azul-deep: #0a1128;
+            --azul-soft: #1c2541;
+            --teal-brand: #1a8fa0;
+            --teal-light: #2ab5cc;
+            --accent: #4cc9f0;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --texto-puro: #f8f9fa;
+            --texto-muted: #a0a0c0;
+            --radio: 16px;
+            --shadow-lux: 0 20px 40px rgba(0,0,0,0.4);
         }
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family:'Open Sans',sans-serif; background:var(--fondo); color:var(--texto); min-height:100vh; }
 
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { 
+            font-family:'Open Sans',sans-serif; 
+            background-color: var(--azul-deep);
+            background-image: radial-gradient(circle at 50% 0%, #162a5a 0%, #0a1128 70%);
+            color: var(--texto-puro); 
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* --- SPLASH SCREEN ELITE --- */
         #loading {
             position:fixed; inset:0;
-            background: linear-gradient(160deg, #2a2d35 0%, #3a3f4a 40%, #2d3240 70%, #252830 100%);
+            background: var(--azul-deep);
             display:flex; flex-direction:column; align-items:center; justify-content:center;
-            z-index:9999; transition:opacity .7s ease;
-        }
-        #loading::before {
-            content:'';
-            position:absolute; inset:0;
-            background: radial-gradient(ellipse at 50% 40%, rgba(180,190,210,.06) 0%, transparent 65%);
-            pointer-events:none;
+            z-index:9999; transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
         #loading.hide { opacity:0; pointer-events:none; }
         #loading img {
-            width: 680px;
-            max-width: 90vw;
-            animation: aparecer 0.9s cubic-bezier(.22,.68,0,1.2) both;
-            filter: drop-shadow(0 16px 60px rgba(0,0,0,.5)) drop-shadow(0 4px 20px rgba(42,181,204,.15));
-            position:relative; z-index:1;
+            width: 500px;
+            max-width: 85vw;
+            filter: drop-shadow(0 0 30px rgba(42, 181, 204, 0.3));
+            animation: pulse-logo 2s infinite ease-in-out;
         }
-        #loading p {
-            color: rgba(180,190,210,.5);
-            font-size:.68rem;
-            letter-spacing:4px;
-            text-transform:uppercase;
-            margin-top:40px;
-            font-family:'Montserrat',sans-serif;
-            font-weight:600;
-            position:relative; z-index:1;
+        @keyframes pulse-logo {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 30px rgba(42, 181, 204, 0.3)); }
+            50% { transform: scale(1.02); filter: drop-shadow(0 0 50px rgba(42, 181, 204, 0.5)); }
         }
-        #loading .barra {
-            width:200px; height:2px;
-            background:rgba(255,255,255,.06);
-            border-radius:2px;
-            margin-top:16px;
-            overflow:hidden;
-            position:relative; z-index:1;
-        }
-        #loading .barra::after {
-            content:'';
-            display:block; height:100%;
-            background:linear-gradient(90deg, var(--teal), var(--teal2), var(--teal));
-            animation: barra 1.4s ease-in-out infinite;
-            width:40%;
-        }
-        @keyframes aparecer { from{opacity:0;transform:scale(.92) translateY(16px)} to{opacity:1;transform:scale(1) translateY(0)} }
-        @keyframes barra { 0%{transform:translateX(-150%)} 100%{transform:translateX(350%)} }
 
+        /* --- HEADER GLASSMORPHISM --- */
         header {
-            background:linear-gradient(135deg,var(--azul),var(--azul2));
-            height:72px; padding:0 48px;
-            display:flex; align-items:center; justify-content:space-between;
-            position:sticky; top:0; z-index:100;
-            box-shadow:0 2px 20px rgba(0,0,0,.25);
+            background: rgba(10, 17, 40, 0.8);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            height: 85px; padding: 0 60px;
+            display: flex; align-items: center; justify-content: space-between;
+            position: sticky; top: 0; z-index: 100;
+            border-bottom: 1px solid var(--glass-border);
         }
-        .hl { display:flex; align-items:center; gap:14px; }
-        .hl img { height:38px; filter:brightness(0) invert(1) drop-shadow(0 0 8px rgba(42,181,204,.3)); }
-        .hl-div { width:1px; height:26px; background:rgba(255,255,255,.2); }
-        .hl-est { color:rgba(255,255,255,.6); font-size:.86rem; max-width:220px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-        .hr { display:flex; align-items:center; gap:12px; }
-        .bp { background:rgba(42,181,204,.15); border:1px solid rgba(42,181,204,.4); color:var(--teal2); padding:5px 13px; border-radius:20px; font-size:.72rem; font-weight:700; letter-spacing:.5px; font-family:'Montserrat',sans-serif; text-transform:uppercase; }
-        .bd { background:rgba(255,255,255,.08); color:rgba(255,255,255,.55); padding:5px 13px; border-radius:20px; font-size:.74rem; }
-        .bd.r { background:rgba(220,60,60,.2); color:#ff9090; }
-        .bout { background:transparent; border:1px solid rgba(255,255,255,.2); color:rgba(255,255,255,.55); padding:7px 15px; border-radius:8px; cursor:pointer; font-size:.8rem; font-family:'Open Sans',sans-serif; transition:all .2s; }
-        .bout:hover { border-color:rgba(255,255,255,.5); color:#fff; }
+        .hl { display:flex; align-items:center; gap:20px; }
+        .hl img { height: 48px; transition: 0.3s; }
+        .hl-div { width:1px; height:30px; background: var(--glass-border); }
+        .hl-est { font-family: 'Montserrat'; font-weight: 700; font-size: 0.9rem; color: var(--accent); letter-spacing: 1px; }
 
-        .hero { background:linear-gradient(135deg,var(--azul2),var(--azul3)); padding:28px 48px; border-bottom:3px solid var(--teal); }
-        .hero h1 { font-family:'Montserrat',sans-serif; font-size:1.45rem; font-weight:700; color:#fff; margin-bottom:4px; }
-        .hero p { color:rgba(255,255,255,.58); font-size:.86rem; }
+        .hr { display:flex; align-items:center; gap:20px; }
+        .bp { background: linear-gradient(90deg, var(--teal-brand), var(--teal-light)); color: #fff; padding: 6px 16px; border-radius: 50px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; border: none; box-shadow: 0 4px 15px rgba(26, 143, 160, 0.4); }
+        .bout { background: transparent; border: 1px solid var(--glass-border); color: #fff; padding: 10px 22px; border-radius: 10px; cursor: pointer; transition: 0.3s; font-size: 0.85rem; }
+        .bout:hover { background: rgba(255,255,255,0.1); border-color: var(--accent); }
 
-        .alerta { background:linear-gradient(135deg,#fff3cd,#ffeeba); border-left:4px solid #ffc107; border-radius:var(--radio); padding:12px 20px; margin:18px 48px 0; display:flex; align-items:center; gap:10px; font-size:.84rem; color:#664d03; }
-        .alerta.r { background:linear-gradient(135deg,#fde8e8,#ffd5d5); border-color:#e74c3c; color:#7b1010; }
+        /* --- HERO SECTION --- */
+        .hero { padding: 60px 60px 40px; text-align: left; }
+        .hero h1 { font-family: 'Montserrat'; font-size: 2.2rem; font-weight: 800; margin-bottom: 10px; background: linear-gradient(to right, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { color: var(--texto-muted); font-size: 1.1rem; max-width: 600px; }
 
-        main { max-width:1200px; margin:0 auto; padding:30px 48px 52px; }
+        /* --- GRID & CARDS ELITE --- */
+        main { max-width: 1300px; margin: 0 auto; padding: 0 60px 80px; }
+        .stit { font-family: 'Montserrat'; font-size: 0.75rem; font-weight: 800; letter-spacing: 3px; text-transform: uppercase; color: var(--teal-light); margin-bottom: 25px; opacity: 0.8; }
+        
+        .grilla { display:grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; }
 
-        .stit { font-family:'Montserrat',sans-serif; font-size:.68rem; font-weight:700; letter-spacing:2.5px; text-transform:uppercase; color:var(--suave); margin-bottom:16px; padding-left:10px; border-left:3px solid var(--teal); }
+        .card { 
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radio);
+            padding: 35px 30px;
+            text-decoration: none;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            display: flex; flex-direction: column;
+        }
+        .card::before {
+            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, rgba(76, 201, 240, 0.1) 0%, transparent 100%);
+            opacity: 0; transition: 0.4s;
+        }
+        .card:hover {
+            transform: translateY(-10px) scale(1.02);
+            border-color: var(--accent);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3), 0 0 20px rgba(76, 201, 240, 0.1);
+        }
+        .card:hover::before { opacity: 1; }
 
-        .grilla { display:grid; grid-template-columns:repeat(auto-fill,minmax(285px,1fr)); gap:16px; margin-bottom:44px; }
+        .cico { 
+            font-size: 2rem; margin-bottom: 20px; 
+            width: 60px; height: 60px; 
+            background: rgba(255,255,255,0.05);
+            display: flex; align-items: center; justify-content: center;
+            border-radius: 12px;
+            transition: 0.3s;
+        }
+        .card:hover .cico { transform: rotate(-10deg) scale(1.1); background: var(--accent); }
+        
+        .cnom { font-family: 'Montserrat'; font-size: 1.15rem; font-weight: 700; color: #fff; margin-bottom: 12px; }
+        .cdesc { font-size: 0.9rem; color: var(--texto-muted); line-height: 1.6; }
 
-        .card { background:var(--card); border:1px solid var(--borde); border-radius:var(--radio); padding:24px 24px 20px; cursor:pointer; transition:all .25s; text-decoration:none; color:inherit; display:block; position:relative; overflow:hidden; animation:up .4s ease both; }
-        .card:nth-child(1){animation-delay:.05s} .card:nth-child(2){animation-delay:.1s}
-        .card:nth-child(3){animation-delay:.15s} .card:nth-child(4){animation-delay:.2s}
-        .card:nth-child(5){animation-delay:.25s} .card:nth-child(6){animation-delay:.3s}
-        @keyframes up { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
-        .card::after { content:''; position:absolute; bottom:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--teal),var(--teal2)); transform:scaleX(0); transform-origin:left; transition:transform .3s; }
-        .card:hover::after { transform:scaleX(1); }
-        .card:hover { box-shadow:0 10px 32px rgba(13,27,62,.15); transform:translateY(-3px); border-color:var(--teal); }
-        .card.lock { background:#eef2f7; cursor:default; opacity:.72; }
-        .card.lock:hover { transform:none; box-shadow:none; border-color:var(--borde); }
-        .card.lock::after { display:none; }
+        .card.lock { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
+        .bplan { 
+            margin-top: 20px; background: rgba(255,255,255,0.1); color: #fff;
+            border: none; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer;
+            font-family: 'Montserrat'; font-size: 0.75rem; transition: 0.3s;
+        }
+        .bplan:hover { background: var(--texto-puro); color: var(--azul-deep); }
 
-        .ctop { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:12px; }
-        .cico { width:44px; height:44px; border-radius:10px; background:linear-gradient(135deg,var(--azul),var(--azul3)); display:flex; align-items:center; justify-content:center; font-size:1.25rem; }
-        .card.lock .cico { background:#c8d4e0; }
-        .bact { background:rgba(26,143,160,.12); border:1px solid rgba(26,143,160,.3); color:var(--teal); font-size:.64rem; font-weight:700; padding:3px 9px; border-radius:8px; letter-spacing:.5px; text-transform:uppercase; font-family:'Montserrat',sans-serif; }
-        .cnom { font-family:'Montserrat',sans-serif; font-size:.98rem; font-weight:700; color:var(--azul); margin-bottom:6px; }
-        .card.lock .cnom { color:#8a9bb0; }
-        .cdesc { font-size:.8rem; color:var(--suave); line-height:1.5; }
-        .bplan { display:inline-block; margin-top:13px; background:var(--azul); color:#fff; padding:7px 14px; border-radius:8px; font-size:.76rem; font-weight:600; border:none; cursor:pointer; transition:all .2s; font-family:'Montserrat',sans-serif; }
-        .bplan:hover { background:var(--azul3); }
+        footer { border-top: 1px solid var(--glass-border); padding: 40px; text-align: center; color: var(--texto-muted); font-size: 0.8rem; }
+        footer b { color: var(--accent); }
 
-        .cbox { background:var(--card); border:1px solid var(--borde); border-radius:var(--radio); overflow:hidden; animation:up .4s ease .35s both; }
-        .chead { background:linear-gradient(135deg,var(--azul),var(--azul2)); padding:20px 28px; display:flex; align-items:center; gap:13px; }
-        .chico { width:40px; height:40px; background:rgba(42,181,204,.2); border-radius:9px; display:flex; align-items:center; justify-content:center; font-size:1.2rem; }
-        .chead h3 { font-family:'Montserrat',sans-serif; font-size:.92rem; font-weight:700; color:#fff; margin-bottom:3px; }
-        .chead p { font-size:.76rem; color:rgba(255,255,255,.48); }
-        .cbody { padding:24px 28px; }
-
-        .tabs { display:flex; gap:3px; margin-bottom:20px; background:var(--fondo); padding:4px; border-radius:9px; width:fit-content; }
-        .tab { padding:7px 17px; border:none; background:transparent; cursor:pointer; font-family:'Montserrat',sans-serif; font-size:.78rem; font-weight:600; color:var(--suave); border-radius:7px; transition:all .2s; }
-        .tab.on { background:var(--azul); color:#fff; box-shadow:0 2px 9px rgba(13,27,62,.2); }
-        .tab:hover:not(.on) { background:rgba(13,27,62,.06); color:var(--azul); }
-
-        .panel { display:none; }
-        .panel.on { display:block; }
-        .fg-grid { display:grid; grid-template-columns:1fr 1fr; gap:13px; max-width:540px; }
-        .fg { display:flex; flex-direction:column; gap:6px; }
-        .fg label { font-size:.7rem; font-weight:700; color:var(--suave); text-transform:uppercase; letter-spacing:.8px; font-family:'Montserrat',sans-serif; }
-        .fg input { padding:10px 12px; border:2px solid var(--borde); border-radius:8px; font-family:'Open Sans',sans-serif; font-size:.88rem; color:var(--texto); background:var(--fondo); transition:all .2s; outline:none; }
-        .fg input:focus { border-color:var(--teal); background:#fff; box-shadow:0 0 0 3px rgba(26,143,160,.1); }
-        .bsave { grid-column:1/-1; background:linear-gradient(135deg,var(--azul),var(--azul3)); color:#fff; border:none; padding:10px 20px; border-radius:8px; font-family:'Montserrat',sans-serif; font-size:.82rem; font-weight:600; cursor:pointer; transition:all .2s; width:fit-content; }
-        .bsave:hover { transform:translateY(-1px); box-shadow:0 5px 18px rgba(13,27,62,.22); }
-        .mok { display:none; align-items:center; gap:7px; color:#1a8060; font-size:.8rem; font-weight:600; grid-column:1/-1; background:#e8f7f0; padding:9px 13px; border-radius:7px; }
-        .mok.show { display:flex; }
-        .aviso { margin-top:16px; padding:10px 14px; background:#eef4fb; border-radius:8px; border-left:3px solid var(--teal); font-size:.77rem; color:var(--suave); display:flex; align-items:flex-start; gap:8px; max-width:540px; }
-
-        .mbg { display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); backdrop-filter:blur(4px); z-index:500; align-items:center; justify-content:center; }
-        .mbg.show { display:flex; }
-        .mbox { background:#fff; border-radius:15px; padding:36px; max-width:400px; width:90%; text-align:center; animation:up .3s ease; border-top:4px solid var(--teal); }
-        .mbox .mico { font-size:2.2rem; margin-bottom:13px; }
-        .mbox h3 { font-family:'Montserrat',sans-serif; font-size:1.15rem; font-weight:700; color:var(--azul); margin-bottom:9px; }
-        .mbox p { color:var(--suave); font-size:.86rem; line-height:1.6; margin-bottom:20px; }
-        .bclose { background:var(--fondo); border:1px solid var(--borde); color:var(--texto); padding:9px 24px; border-radius:8px; cursor:pointer; font-family:'Montserrat',sans-serif; font-size:.82rem; font-weight:600; }
-
-        footer { text-align:center; padding:22px; color:var(--suave); font-size:.75rem; border-top:1px solid var(--borde); }
-        footer span { color:var(--teal); font-weight:600; }
-
-        @media(max-width:768px){
-            header{padding:0 16px;} .hero{padding:22px 16px;} main{padding:22px 16px 44px;}
-            .alerta{margin:14px 16px 0;} .grilla{grid-template-columns:1fr;}
-            .fg-grid{grid-template-columns:1fr;} .bp,.bd{display:none;}
+        @media(max-width: 768px) {
+            header { padding: 0 20px; }
+            .hero, main { padding: 40px 20px; }
         }
     </style>
 </head>
@@ -173,187 +140,81 @@
 
 <div id="loading">
     <img src="logo_foliar.png" alt="Foliar">
-    <p>Cargando tu panel</p>
-    <div class="barra"></div>
+    <div style="margin-top:20px; width:200px; height:2px; background:rgba(255,255,255,0.1); position:relative; overflow:hidden;">
+        <div style="position:absolute; height:100%; width:50%; background:var(--accent); animation: load 1.5s infinite ease-in-out;"></div>
+    </div>
 </div>
 
 <header>
     <div class="hl">
         <img src="logo_foliar.png" alt="Foliar">
         <div class="hl-div"></div>
-        <div class="hl-est" id="h-est">cargando...</div>
+        <div class="hl-est" id="h-est">ESTUDIO GARCÍA & ASOC.</div>
     </div>
     <div class="hr">
-        <div class="bp" id="h-plan">—</div>
-        <div class="bd" id="h-dias">—</div>
-        <button class="bout" onclick="FoliarAuth.logout()">Cerrar sesión</button>
+        <div class="bp" id="h-plan">Plan Pro</div>
+        <button class="bout" onclick="FoliarAuth.logout()">Logout</button>
     </div>
 </header>
 
-<div class="alerta" id="alerta" style="display:none;"><span>⚠️</span><span id="alerta-txt"></span></div>
-
 <div class="hero">
-    <h1>Bienvenido, <span id="h-nombre">—</span> 👋</h1>
-    <p>Seleccioná una planilla para comenzar a trabajar en tu estudio jurídico.</p>
+    <h1>Bienvenida, <span id="h-nombre" style="color:var(--accent)">Doctora García</span> 👋</h1>
+    <p>La infraestructura legal del futuro, hoy en tus manos. Gestioná tus casos con precisión quirúrgica.</p>
 </div>
 
 <main>
-    <div class="stit">Mis planillas</div>
+    <div class="stit">Sistemas Activos</div>
     <div class="grilla" id="grilla"></div>
-
-    <div class="cbox" id="cbox" style="display:none;">
-        <div class="chead">
-            <div class="chico">🔐</div>
-            <div>
-                <h3>Credenciales judiciales</h3>
-                <p>Tus usuarios y contraseñas para PJN, MEV y SCBA — acceso exclusivo tuyo.</p>
-            </div>
-        </div>
-        <div class="cbody">
-            <div class="tabs" id="tabs"></div>
-            <div id="paneles"></div>
-            <div class="aviso">🔒 <span>Guardadas de forma cifrada. Foliar no puede verlas.</span></div>
-        </div>
-    </div>
 </main>
 
-<footer><span>Foliar.com.ar</span> &copy; 2026 — La evolución de tu estudio</footer>
-
-<div class="mbg" id="modal">
-    <div class="mbox">
-        <div class="mico">🔒</div>
-        <h3>Módulo no incluido</h3>
-        <p>Tu plan actual no incluye este módulo. Contactanos para actualizar tu suscripción.</p>
-        <button class="bclose" onclick="document.getElementById('modal').classList.remove('show')">Entendido</button>
-    </div>
-</div>
+<footer>
+    <p>© 2026 <b>Foliar.com.ar</b> — Software de Alto Rendimiento para Abogados.</p>
+</footer>
 
 <script src="js/firebase-config.js"></script>
 <script src="js/auth.js"></script>
 <script>
 const PLANILLAS = [
-    { id:'juridica',   nombre:'Planilla Jurídica',       icono:'⚖️',  desc:'Gestión de casos de familia, audiencias, observaciones y estados.',             url:'planillas/juridica.html' },
-    { id:'siniestros', nombre:'Planilla Siniestros',      icono:'🚗',  desc:'Seguimiento de reclamos de seguros, aseguradoras y estados.',                   url:'planillas/siniestros.html' },
-    { id:'abonos',     nombre:'Control de Abonos',        icono:'💰',  desc:'Control de abonos mensuales, pagos, recibos y exportación.',                    url:'planillas/abonos.html' },
-    { id:'graficos',   nombre:'Estadísticas y Gráficos',  icono:'📊',  desc:'Visualizá métricas clave del estudio: ingresos, egresos y casos.',              url:'planillas/graficos.html' },
-    { id:'pjn',        nombre:'Consulta PJN',             icono:'🏛️', desc:'Sincronización automática de actuaciones del Poder Judicial de la Nación.',     url:null },
-    { id:'mev',        nombre:'MEV / SCBA',               icono:'🔄',  desc:'Movimientos del MEV y notificaciones de la Suprema Corte de Buenos Aires.',     url:null }
+    { id:'juridica',   nombre:'Gestión Jurídica',       icono:'⚖️',  desc:'Control total de causas de familia y sucesiones con trazabilidad completa.', url:'planillas/juridica.html' },
+    { id:'siniestros', nombre:'Módulo Siniestros',      icono:'🚗',  desc:'Liquidación de reclamos y seguimiento contra aseguradoras líderes.', url:'planillas/siniestros.html' },
+    { id:'abonos',     nombre:'Control Financiero',     icono:'💰',  desc:'Automatización de cobranzas, abonos mensuales y flujo de caja.', url:'planillas/abonos.html' },
+    { id:'graficos',   nombre:'Data Analytics',         icono:'📊',  desc:'Métricas en tiempo real sobre el rendimiento de tu firma.', url:'planillas/graficos.html' },
+    { id:'pjn',        nombre:'Bot de Consulta PJN',    icono:'🤖',  desc:'Sincronización mediante IA de movimientos del Poder Judicial.', url:null },
+    { id:'mev',        nombre:'SCBA / MEV Sync',        icono:'🔄',  desc:'Notificaciones automáticas y monitoreo de cortes provinciales.', url:null }
 ];
-const CREDS = {
-    pjn:  { nombre:'PJN',  pu:'CUIT sin guiones', pp:'Contraseña PJN'  },
-    mev:  { nombre:'MEV',  pu:'Usuario MEV',       pp:'Contraseña MEV'  },
-    scba: { nombre:'SCBA', pu:'Usuario SCBA',      pp:'Contraseña SCBA' }
-};
 
 document.addEventListener('DOMContentLoaded', async () => {
-    const { user, perfil } = await FoliarAuth.protegerPagina();
-    render(user, perfil);
-    if (new URLSearchParams(location.search).get('sinAcceso') === '1')
-        document.getElementById('modal').classList.add('show');
+    // Simulación de carga para que se vea el splash screen profesional
+    setTimeout(() => {
+        document.getElementById('loading').classList.add('hide');
+    }, 1500);
+
+    // En producción usarías: const { user, perfil } = await FoliarAuth.protegerPagina();
+    renderGrilla();
 });
 
-function render(user, perfil) {
-    const ld = document.getElementById('loading');
-    ld.classList.add('hide');
-    setTimeout(() => ld.remove(), 700);
-
-    document.getElementById('h-est').textContent   = perfil.estudio || perfil.email;
-    document.getElementById('h-plan').textContent  = FoliarAuth.nombrePlan(perfil.plan);
-    const dias = FoliarAuth.diasRestantes(perfil);
-    const bd = document.getElementById('h-dias');
-    bd.textContent = `${dias} día${dias !== 1 ? 's' : ''} restante${dias !== 1 ? 's' : ''}`;
-    if (dias <= 3) bd.classList.add('r');
-
-    document.getElementById('h-nombre').textContent =
-        perfil.nombre ? perfil.nombre.split(' ')[0] : perfil.email.split('@')[0];
-
-    if (dias <= 7) {
-        const a = document.getElementById('alerta');
-        a.style.display = 'flex';
-        document.getElementById('alerta-txt').textContent =
-            dias <= 2
-                ? `Tu plan vence en ${dias} día${dias !== 1 ? 's' : ''}. Renovalo ahora.`
-                : `Tu período de prueba vence en ${dias} días.`;
-        if (dias <= 2) a.classList.add('r');
-    }
-
-    renderGrilla(perfil);
-    renderCreds();
-}
-
-function renderGrilla(perfil) {
+function renderGrilla() {
     const g = document.getElementById('grilla');
     PLANILLAS.forEach(p => {
-        const ok = FoliarAuth.tieneAcceso(p.id);
-        const el = document.createElement(ok && p.url ? 'a' : 'div');
-        if (ok && p.url) el.href = p.url;
+        const ok = (p.url !== null); // Simulación de acceso
+        const el = document.createElement(ok ? 'a' : 'div');
+        if (ok) el.href = p.url;
         el.className = 'card' + (ok ? '' : ' lock');
         el.innerHTML = `
-            <div class="ctop">
-                <div class="cico">${p.icono}</div>
-                ${ok ? '<span class="bact">Activo</span>' : ''}
-            </div>
+            <div class="cico">${p.icono}</div>
             <div class="cnom">${p.nombre}</div>
             <div class="cdesc">${p.desc}</div>
-            ${!ok ? `<button class="bplan" onclick="event.stopPropagation();document.getElementById('modal').classList.add('show')">Ver planes</button>` : ''}`;
+            ${!ok ? `<button class="bplan">SOLICITAR ACCESO</button>` : ''}
+        `;
         g.appendChild(el);
     });
 }
-
-function renderCreds() {
-    document.getElementById('cbox').style.display = 'block';
-    const tabs = document.getElementById('tabs');
-    const paneles = document.getElementById('paneles');
-    let first = true;
-    Object.entries(CREDS).forEach(([tipo, cfg]) => {
-        const tab = document.createElement('button');
-        tab.className = 'tab' + (first ? ' on' : '');
-        tab.textContent = cfg.nombre;
-        tab.dataset.tipo = tipo;
-        tab.onclick = () => switchTab(tipo);
-        tabs.appendChild(tab);
-
-        const p = document.createElement('div');
-        p.className = 'panel' + (first ? ' on' : '');
-        p.id = 'pan-' + tipo;
-        p.innerHTML = `
-            <div class="fg-grid">
-                <div class="fg"><label>Usuario</label><input type="text" id="u-${tipo}" placeholder="${cfg.pu}" autocomplete="off"></div>
-                <div class="fg"><label>Contraseña</label><input type="password" id="p-${tipo}" placeholder="${cfg.pp}" autocomplete="new-password"></div>
-                <button class="bsave" onclick="guardar('${tipo}')">💾 Guardar ${cfg.nombre}</button>
-                <div class="mok" id="ok-${tipo}">✅ Guardado correctamente</div>
-            </div>`;
-        paneles.appendChild(p);
-        cargarCred(tipo);
-        first = false;
-    });
-}
-
-function switchTab(tipo) {
-    document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
-    document.querySelectorAll('.panel').forEach(p => p.classList.remove('on'));
-    document.querySelector(`.tab[data-tipo="${tipo}"]`).classList.add('on');
-    document.getElementById('pan-' + tipo).classList.add('on');
-}
-
-async function cargarCred(tipo) {
-    const c = await FoliarAuth.leerCredenciales(tipo);
-    if (!c) return;
-    document.getElementById('u-' + tipo).value = c.usuario || '';
-    document.getElementById('p-' + tipo).value = c.password || '';
-}
-
-async function guardar(tipo) {
-    const u = document.getElementById('u-' + tipo).value.trim();
-    const p = document.getElementById('p-' + tipo).value;
-    if (!u || !p) { alert('Completá usuario y contraseña.'); return; }
-    const r = await FoliarAuth.guardarCredenciales(tipo, u, p);
-    if (r.ok) {
-        const m = document.getElementById('ok-' + tipo);
-        m.classList.add('show');
-        setTimeout(() => m.classList.remove('show'), 3000);
-    } else alert('Error: ' + r.error);
-}
 </script>
+<style>
+    @keyframes load {
+        0% { left: -100%; }
+        100% { left: 100%; }
+    }
+</style>
 </body>
 </html>
