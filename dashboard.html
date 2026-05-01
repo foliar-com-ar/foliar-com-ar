@@ -4,217 +4,192 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Foliar — Panel de Control</title>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+    <!-- Librería de Iconos Profesionales -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --azul-deep: #0a1128;
-            --azul-soft: #1c2541;
-            --teal-brand: #1a8fa0;
-            --teal-light: #2ab5cc;
-            --accent: #4cc9f0;
-            --glass: rgba(255, 255, 255, 0.03);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --texto-puro: #f8f9fa;
-            --texto-muted: #a0a0c0;
-            --radio: 16px;
-            --shadow-lux: 0 20px 40px rgba(0,0,0,0.4);
+            --azul-puro: #0a1128;
+            --azul-brillante: #4cc9f0;
+            --gris-texto: #a0a0c0;
+            --blanco: #ffffff;
+            --glass: rgba(255, 255, 255, 0.02);
+            --borde: rgba(255, 255, 255, 0.1);
         }
 
         * { margin:0; padding:0; box-sizing:border-box; }
         body { 
-            font-family:'Open Sans',sans-serif; 
-            background-color: var(--azul-deep);
-            background-image: radial-gradient(circle at 50% 0%, #162a5a 0%, #0a1128 70%);
-            color: var(--texto-puro); 
+            font-family:'Open Sans', sans-serif; 
+            background: var(--azul-puro);
+            color: var(--blanco);
             min-height: 100vh;
-            overflow-x: hidden;
         }
 
-        /* --- SPLASH SCREEN ELITE --- */
+        /* --- SOLUCIÓN AL LOGO (OCULTA EL FONDO DE CUADROS) --- */
+        .logo-container {
+            width: 55px;
+            height: 55px;
+            background: white; /* Fondo blanco sólido para tapar los cuadros */
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 5px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+        .logo-container img {
+            width: 140%; /* Zoom para ocultar bordes feos de la imagen original */
+            height: auto;
+            object-fit: contain;
+        }
+
+        /* --- LOADING SCREEN --- */
         #loading {
             position:fixed; inset:0;
-            background: var(--azul-deep);
+            background: var(--azul-puro);
             display:flex; flex-direction:column; align-items:center; justify-content:center;
-            z-index:9999; transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index:9999; transition: 0.5s;
         }
         #loading.hide { opacity:0; pointer-events:none; }
-        #loading img {
-            width: 500px;
-            max-width: 85vw;
-            filter: drop-shadow(0 0 30px rgba(42, 181, 204, 0.3));
-            animation: pulse-logo 2s infinite ease-in-out;
+        #loading .logo-big {
+            width: 120px; height: 120px;
+            background: white; border-radius: 20px;
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: 25px; overflow: hidden;
+            animation: pulse 2s infinite;
         }
-        @keyframes pulse-logo {
-            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 30px rgba(42, 181, 204, 0.3)); }
-            50% { transform: scale(1.02); filter: drop-shadow(0 0 50px rgba(42, 181, 204, 0.5)); }
+        #loading .logo-big img { width: 150%; }
+
+        @keyframes pulse {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,255,255,0.4); }
+            70% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(255,255,255,0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255,255,255,0); }
         }
 
-        /* --- HEADER GLASSMORPHISM --- */
+        /* --- HEADER --- */
         header {
-            background: rgba(10, 17, 40, 0.8);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            height: 85px; padding: 0 60px;
+            height: 90px; padding: 0 50px;
             display: flex; align-items: center; justify-content: space-between;
+            border-bottom: 1px solid var(--borde);
+            background: rgba(10, 17, 40, 0.8);
+            backdrop-filter: blur(10px);
             position: sticky; top: 0; z-index: 100;
-            border-bottom: 1px solid var(--glass-border);
         }
         .hl { display:flex; align-items:center; gap:20px; }
-        .hl img { height: 48px; transition: 0.3s; }
-        .hl-div { width:1px; height:30px; background: var(--glass-border); }
-        .hl-est { font-family: 'Montserrat'; font-weight: 700; font-size: 0.9rem; color: var(--accent); letter-spacing: 1px; }
+        .hl-est { font-family: 'Montserrat'; font-weight: 700; letter-spacing: 1px; color: var(--azul-brillante); font-size: 0.85rem; }
 
-        .hr { display:flex; align-items:center; gap:20px; }
-        .bp { background: linear-gradient(90deg, var(--teal-brand), var(--teal-light)); color: #fff; padding: 6px 16px; border-radius: 50px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; border: none; box-shadow: 0 4px 15px rgba(26, 143, 160, 0.4); }
-        .bout { background: transparent; border: 1px solid var(--glass-border); color: #fff; padding: 10px 22px; border-radius: 10px; cursor: pointer; transition: 0.3s; font-size: 0.85rem; }
-        .bout:hover { background: rgba(255,255,255,0.1); border-color: var(--accent); }
-
-        /* --- HERO SECTION --- */
-        .hero { padding: 60px 60px 40px; text-align: left; }
-        .hero h1 { font-family: 'Montserrat'; font-size: 2.2rem; font-weight: 800; margin-bottom: 10px; background: linear-gradient(to right, #fff, var(--accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .hero p { color: var(--texto-muted); font-size: 1.1rem; max-width: 600px; }
-
-        /* --- GRID & CARDS ELITE --- */
-        main { max-width: 1300px; margin: 0 auto; padding: 0 60px 80px; }
-        .stit { font-family: 'Montserrat'; font-size: 0.75rem; font-weight: 800; letter-spacing: 3px; text-transform: uppercase; color: var(--teal-light); margin-bottom: 25px; opacity: 0.8; }
+        /* --- GRID & CARDS --- */
+        main { max-width: 1400px; margin: 0 auto; padding: 60px 50px; }
+        .hero h1 { font-family: 'Montserrat'; font-size: 2.5rem; font-weight: 800; margin-bottom: 40px; }
         
-        .grilla { display:grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; }
+        .grilla { display:grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 30px; }
 
         .card { 
             background: var(--glass);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radio);
-            padding: 35px 30px;
+            border: 1px solid var(--borde);
+            border-radius: 20px;
+            padding: 40px;
             text-decoration: none;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            position: relative;
-            overflow: hidden;
-            display: flex; flex-direction: column;
-        }
-        .card::before {
-            content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(135deg, rgba(76, 201, 240, 0.1) 0%, transparent 100%);
-            opacity: 0; transition: 0.4s;
+            color: inherit;
+            transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .card:hover {
-            transform: translateY(-10px) scale(1.02);
-            border-color: var(--accent);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3), 0 0 20px rgba(76, 201, 240, 0.1);
+            background: rgba(255, 255, 255, 0.05);
+            border-color: var(--azul-brillante);
+            transform: translateY(-8px);
         }
-        .card:hover::before { opacity: 1; }
 
-        .cico { 
-            font-size: 2rem; margin-bottom: 20px; 
-            width: 60px; height: 60px; 
-            background: rgba(255,255,255,0.05);
-            display: flex; align-items: center; justify-content: center;
-            border-radius: 12px;
-            transition: 0.3s;
+        /* ICONOS PROFESIONALES */
+        .icon-box {
+            color: var(--azul-brillante);
+            margin-bottom: 25px;
+            display: inline-block;
         }
-        .card:hover .cico { transform: rotate(-10deg) scale(1.1); background: var(--accent); }
-        
-        .cnom { font-family: 'Montserrat'; font-size: 1.15rem; font-weight: 700; color: #fff; margin-bottom: 12px; }
-        .cdesc { font-size: 0.9rem; color: var(--texto-muted); line-height: 1.6; }
-
-        .card.lock { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
-        .bplan { 
-            margin-top: 20px; background: rgba(255,255,255,0.1); color: #fff;
-            border: none; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer;
-            font-family: 'Montserrat'; font-size: 0.75rem; transition: 0.3s;
+        .card:hover .icon-box {
+            animation: bounce 0.5s ease-in-out;
         }
-        .bplan:hover { background: var(--texto-puro); color: var(--azul-deep); }
 
-        footer { border-top: 1px solid var(--glass-border); padding: 40px; text-align: center; color: var(--texto-muted); font-size: 0.8rem; }
-        footer b { color: var(--accent); }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .cnom { font-family: 'Montserrat'; font-size: 1.3rem; font-weight: 700; margin-bottom: 15px; }
+        .cdesc { color: var(--gris-texto); line-height: 1.6; font-size: 0.95rem; }
+
+        .bout { background: transparent; border: 1px solid var(--borde); color: white; padding: 12px 25px; border-radius: 12px; cursor: pointer; transition: 0.3s; }
+        .bout:hover { background: white; color: var(--azul-puro); }
 
         @media(max-width: 768px) {
-            header { padding: 0 20px; }
-            .hero, main { padding: 40px 20px; }
+            header, main { padding: 20px; }
+            .hero h1 { font-size: 1.8rem; }
         }
     </style>
 </head>
 <body>
 
 <div id="loading">
-    <img src="logo_foliar.png" alt="Foliar">
-    <div style="margin-top:20px; width:200px; height:2px; background:rgba(255,255,255,0.1); position:relative; overflow:hidden;">
-        <div style="position:absolute; height:100%; width:50%; background:var(--accent); animation: load 1.5s infinite ease-in-out;"></div>
-    </div>
+    <div class="logo-big"><img src="logo_foliar.png.PNG" alt="Foliar"></div>
+    <p style="letter-spacing: 3px; font-size: 0.7rem; text-transform: uppercase;">Iniciando Terminal Seguro</p>
 </div>
 
 <header>
     <div class="hl">
-        <img src="logo_foliar.png" alt="Foliar">
-        <div class="hl-div"></div>
-        <div class="hl-est" id="h-est">ESTUDIO GARCÍA & ASOC.</div>
+        <div class="logo-container">
+            <img src="logo_foliar.png.PNG" alt="Foliar">
+        </div>
+        <div class="hl-est">ESTUDIO GARCÍA & ASOC.</div>
     </div>
-    <div class="hr">
-        <div class="bp" id="h-plan">Plan Pro</div>
-        <button class="bout" onclick="FoliarAuth.logout()">Logout</button>
-    </div>
+    <button class="bout">Cerrar Sesión</button>
 </header>
 
-<div class="hero">
-    <h1>Bienvenida, <span id="h-nombre" style="color:var(--accent)">Doctora García</span> 👋</h1>
-    <p>La infraestructura legal del futuro, hoy en tus manos. Gestioná tus casos con precisión quirúrgica.</p>
-</div>
-
 <main>
-    <div class="stit">Sistemas Activos</div>
-    <div class="grilla" id="grilla"></div>
+    <div class="hero">
+        <h1>Bienvenida, <span style="color:var(--azul-brillante)">Dra. García</span></h1>
+    </div>
+
+    <div class="grilla">
+        <!-- Gestión Jurídica -->
+        <a href="#" class="card">
+            <div class="icon-box"><i data-lucide="scale" size="32"></i></div>
+            <div class="cnom">Gestión Jurídica</div>
+            <div class="cdesc">Control de expedientes, plazos procesales y audiencias en un solo lugar.</div>
+        </a>
+
+        <!-- Siniestros -->
+        <a href="#" class="card">
+            <div class="icon-box"><i data-lucide="car" size="32"></i></div>
+            <div class="cnom">Módulo Siniestros</div>
+            <div class="cdesc">Seguimiento de reclamos administrativos y mediaciones de tránsito.</div>
+        </a>
+
+        <!-- Finanzas -->
+        <a href="#" class="card">
+            <div class="icon-box"><i data-lucide="wallet" size="32"></i></div>
+            <div class="cnom">Control Financiero</div>
+            <div class="cdesc">Administración de honorarios, gastos de oficina y facturación.</div>
+        </a>
+
+        <!-- PJN -->
+        <div class="card" style="opacity: 0.6;">
+            <div class="icon-box"><i data-lucide="bot" size="32"></i></div>
+            <div class="cnom">Bot PJN / MEV</div>
+            <div class="cdesc">Sincronización automática de novedades judiciales (Próximamente).</div>
+        </div>
+    </div>
 </main>
 
-<footer>
-    <p>© 2026 <b>Foliar.com.ar</b> — Software de Alto Rendimiento para Abogados.</p>
-</footer>
-
-<script src="js/firebase-config.js"></script>
-<script src="js/auth.js"></script>
 <script>
-const PLANILLAS = [
-    { id:'juridica',   nombre:'Gestión Jurídica',       icono:'⚖️',  desc:'Control total de causas de familia y sucesiones con trazabilidad completa.', url:'planillas/juridica.html' },
-    { id:'siniestros', nombre:'Módulo Siniestros',      icono:'🚗',  desc:'Liquidación de reclamos y seguimiento contra aseguradoras líderes.', url:'planillas/siniestros.html' },
-    { id:'abonos',     nombre:'Control Financiero',     icono:'💰',  desc:'Automatización de cobranzas, abonos mensuales y flujo de caja.', url:'planillas/abonos.html' },
-    { id:'graficos',   nombre:'Data Analytics',         icono:'📊',  desc:'Métricas en tiempo real sobre el rendimiento de tu firma.', url:'planillas/graficos.html' },
-    { id:'pjn',        nombre:'Bot de Consulta PJN',    icono:'🤖',  desc:'Sincronización mediante IA de movimientos del Poder Judicial.', url:null },
-    { id:'mev',        nombre:'SCBA / MEV Sync',        icono:'🔄',  desc:'Notificaciones automáticas y monitoreo de cortes provinciales.', url:null }
-];
+    // Inicializa los iconos de Lucide
+    lucide.createIcons();
 
-document.addEventListener('DOMContentLoaded', async () => {
-    // Simulación de carga para que se vea el splash screen profesional
-    setTimeout(() => {
-        document.getElementById('loading').classList.add('hide');
-    }, 1500);
-
-    // En producción usarías: const { user, perfil } = await FoliarAuth.protegerPagina();
-    renderGrilla();
-});
-
-function renderGrilla() {
-    const g = document.getElementById('grilla');
-    PLANILLAS.forEach(p => {
-        const ok = (p.url !== null); // Simulación de acceso
-        const el = document.createElement(ok ? 'a' : 'div');
-        if (ok) el.href = p.url;
-        el.className = 'card' + (ok ? '' : ' lock');
-        el.innerHTML = `
-            <div class="cico">${p.icono}</div>
-            <div class="cnom">${p.nombre}</div>
-            <div class="cdesc">${p.desc}</div>
-            ${!ok ? `<button class="bplan">SOLICITAR ACCESO</button>` : ''}
-        `;
-        g.appendChild(el);
+    // Quitar pantalla de carga
+    window.addEventListener('load', () => {
+        setTimeout(() => {
+            document.getElementById('loading').classList.add('hide');
+        }, 1200);
     });
-}
 </script>
-<style>
-    @keyframes load {
-        0% { left: -100%; }
-        100% { left: 100%; }
-    }
-</style>
 </body>
 </html>
